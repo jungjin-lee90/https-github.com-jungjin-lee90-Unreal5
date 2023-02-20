@@ -1,11 +1,5 @@
 # Collision
-	UMyAnimInstance::UMyAnimInstance()
-	{
-		CurrentPawnSpeed = 0.0f;
-
-		static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("AnimMontage'/Game/BluePrint/AnimationMontage/AM_ShinbiAttack.AM_ShinbiAttack'"));
-		if (ATTACK_MONTAGE.Succeeded())
-		{
-			AttackMontage = ATTACK_MONTAGE.Object;
-		}
-	}
+	public:
+	UFUNCTION() // 나는 좌클릭, 우클릭 각각 해주려고 2개를 만들었다.
+	void AttackHitNotifyL();
+	void AttackHitNotifyR();
