@@ -1,17 +1,14 @@
 # Collision
-	void AMyCharacter::BeginPlay()
+	void UMyAnimInstance::AnimNotify_AttackHitNotifyL()
 	{
-	...
-		MyAnim->OnAttackNotifyL.AddUObject(this, &AMyCharacter::AttackHitL);
-		MyAnim->OnAttackNotifyR.AddUObject(this, &AMyCharacter::AttackHitR);	
-	}
-	
-	void AMyCharacter::AttackHitL()
-	{
-
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("AttackHitNotifyL"));
+		OnAttackHitNotifyL.Broadcast();
 	}
 
-	void AMyCharacter::AttackHitR()
+	void UMyAnimInstance::AnimNotify_AttackHitNotifyR()
 	{
-
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("AttackHitNotifyR"));
+		OnAttackHitNotifyR.Broadcast();
 	}
