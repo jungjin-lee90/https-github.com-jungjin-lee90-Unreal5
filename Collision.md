@@ -1,5 +1,17 @@
 # Collision
-	public:
+	void AMyCharacter::BeginPlay()
+	{
 	...
-		void AttackHitL();
-		void AttackHitR();
+		MyAnim->OnAttackNotifyL.AddUObject(this, &AMyCharacter::AttackHitL);
+		MyAnim->OnAttackNotifyR.AddUObject(this, &AMyCharacter::AttackHitR);	
+	}
+	
+	void AMyCharacter::AttackHitL()
+	{
+
+	}
+
+	void AMyCharacter::AttackHitR()
+	{
+
+	}
