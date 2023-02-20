@@ -1,6 +1,11 @@
 # Collision
-    static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("AnimMontage'/Game/BluePrint/AnimationMontage/AM_ShinbiAttack.AM_ShinbiAttack'"));
-	if (ATTACK_MONTAGE.Succeeded())
+	UMyAnimInstance::UMyAnimInstance()
 	{
-		AttackMontage = ATTACK_MONTAGE.Object;
+		CurrentPawnSpeed = 0.0f;
+
+		static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("AnimMontage'/Game/BluePrint/AnimationMontage/AM_ShinbiAttack.AM_ShinbiAttack'"));
+		if (ATTACK_MONTAGE.Succeeded())
+		{
+			AttackMontage = ATTACK_MONTAGE.Object;
+		}
 	}
