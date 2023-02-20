@@ -1,2 +1,2 @@
 # Collision
-
+    private String email;
