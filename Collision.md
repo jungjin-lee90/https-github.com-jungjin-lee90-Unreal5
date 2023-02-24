@@ -6,5 +6,5 @@
 	if (UI_BAR.Succeeded())
 	{
 		HPBarWidget->SetWidgetClass(UI_BAR.Class);
-		HPBarWidget->SetDrawSize(FVector2D(200.0f, 18.0f));
+		HPBarWidget->SetDrawSize(FVector2D(150.0f, 30.0f));
 	}
