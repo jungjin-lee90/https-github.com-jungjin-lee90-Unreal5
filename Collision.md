@@ -1,3 +1,6 @@
 # Collision
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI, Meta = (AllowPrivateAccess = true))
-	float HPHeight;
+	void AMyCharacter::BeginPlay()
+	{...
+		if (HPBarWidget)
+			HPBarWidget->SetRelativeLocation(FVector(0.0f, 0.0f, HPHeight));
+	}
