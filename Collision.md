@@ -1,12 +1,19 @@
 # Collision
-	protected:
-		virtual void NativeConstruct() override;
+	#include "Components/TextBlock.h"
 
-	private:
-		UPROPERTY()
-		class UTextBlock* NameTextBox;
+	void UMyUserWidgetName::NativeConstruct()
+	{
+		Super::NativeConstruct();
 
-		FText NameText;
+		NameTextBox = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Name")));
+		if (NameTextBox)
+		{
+			NameTextBox->SetText(NameText);
+		}
+	}
 
-	public:
-		void SetMonsterName(FText str);
+
+	void UMyUserWidgetName::SetMonsterName(FText str)
+	{
+		NameText = str;
+	}
