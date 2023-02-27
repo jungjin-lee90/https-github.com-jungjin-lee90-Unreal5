@@ -1,17 +1,7 @@
 # Collision
-	public:
-	...
-		float CurrentHP;
-		
-	private:
-	...
-		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
-		float Defense;
-		
-		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
-		float MaxHP;
-		
-		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
-		float CurrentAttackDamage;
-		
-		float DefaultDamage = 50;
+	void AMyCharacter::AttackHitNotifyL()
+	{
+		...
+		HitResult.GetActor()->TakeDamage(CurrentAttackDamage, DamageEvent, GetController(), this);
+	}
+	
