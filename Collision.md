@@ -11,4 +11,7 @@
 		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
 		float MaxHP;
 		
+		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
+		float CurrentAttackDamage;
+		
 		float DefaultDamage = 50;
