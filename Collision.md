@@ -1,20 +1,12 @@
 # Collision
-	#include "Components/ProgressBar.h"
+	protected:
+		virtual void NativeConstruct() override;
 
-	void UMyUserWidget::NativeConstruct()
-	{
-		Super::NativeConstruct();
+	private:
+		UPROPERTY()
+		class UTextBlock* NameTextBox;
 
-		HPProgressBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HPBar")));
-		if (HPProgressBar)
-		{
-			fCurrentHP = 100.0f;
-			HPProgressBar->SetPercent(fCurrentHP);
-		}
-	}
+		FText NameText;
 
-	void UMyUserWidget::SetHP(float HP)
-	{
-		fCurrentHP = HP;
-		HPProgressBar->SetPercent(HP);
-	}
+	public:
+		void SetMonsterName(FText str);
