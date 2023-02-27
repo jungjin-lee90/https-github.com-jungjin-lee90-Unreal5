@@ -1,11 +1,20 @@
 # Collision
-	protected:
-		virtual void NativeConstruct() override;
+	#include "Components/ProgressBar.h"
 
-	private:
-		UPROPERTY()
-		class UProgressBar* HPProgressBar;
+	void UMyUserWidget::NativeConstruct()
+	{
+		Super::NativeConstruct();
 
-		float fCurrentHP;
-	public:
-		void SetHP(float HP);
+		HPProgressBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HPBar")));
+		if (HPProgressBar)
+		{
+			fCurrentHP = 100.0f;
+			HPProgressBar->SetPercent(fCurrentHP);
+		}
+	}
+
+	void UMyUserWidget::SetHP(float HP)
+	{
+		fCurrentHP = HP;
+		HPProgressBar->SetPercent(HP);
+	}
