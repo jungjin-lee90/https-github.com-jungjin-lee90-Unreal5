@@ -1,6 +1,5 @@
 # Collision
-	void AMyCharacter::BeginPlay()
+	if (CurrentHP <= 0.0f)
 	{
-		...
-		CurrentHP = MaxHP;
+		MyAnim->SetDead();
 	}
