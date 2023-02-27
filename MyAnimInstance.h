@@ -6,6 +6,8 @@
 #include "Animation/AnimInstance.h"
 #include "MyAnimInstance.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnAttackHitNotifyLDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnAttackHitNotifyRDelegate);
 /**
  * 
  */
@@ -16,6 +18,18 @@ class MYPROJECT_API UMyAnimInstance : public UAnimInstance
 public:
 	UMyAnimInstance();
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	void PlayAttackMontage();
+	void PlayAttackMontageR();
+
+	UFUNCTION()
+	void AnimNotify_AttackHitNotifyL();
+	UFUNCTION()
+	void AnimNotify_AttackHitNotifyR();
+
+	FOnAttackHitNotifyLDelegate OnAttackHitNotifyL;
+	FOnAttackHitNotifyRDelegate OnAttackHitNotifyR;
+
+	void SetDead();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -26,4 +40,10 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* AttackMontageR;
+
+	UPROPERTY(BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	bool bDead;
 };

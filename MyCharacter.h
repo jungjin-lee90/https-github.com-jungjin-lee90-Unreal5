@@ -22,12 +22,61 @@ public:
 	UCameraComponent* Camera;
 
 	void MoveForward(float NewAxisValue);
-
 	void MoveRight(float NewAxisValue);
-
 	void Turn(float NewAxisValue);
-
 	void LookUp(float NewAxisValue);
+
+	void Attack();
+	void AttackR();
+
+	void AttackHitNotifyL();
+	void AttackHitNotifyR();
+
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+		class AController* EventInstigator, AActor* DamageCauser) override;
+
+	UPROPERTY(VisibleAnywhere, Category = Effect)
+	UParticleSystemComponent* PowerUpEffect;
+	
+	UPROPERTY(VisibleAnywhere, Category = Effect)
+	UParticleSystemComponent* AttackEffect;
+
+	UPROPERTY(VisibleAnywhere, Category = Effect)
+	UParticleSystemComponent* DamageEffect;
+
+	UPROPERTY(VisibleAnywhere, Category = UI)
+	class UWidgetComponent* HPBarWidget;
+
+	UPROPERTY(VisibleAnywhere, Category = UI)
+	class UWidgetComponent* NameWidget;
+
+	float CurrentHP;
+
+private:
+	bool IsAttacking = false;
+	UPROPERTY()
+	class UMyAnimInstance* MyAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI, Meta = (AllowPrivateAccess = true))
+	float HPHeight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI, Meta = (AllowPrivateAccess = true))
+	float NameHeight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI, Meta = (AllowPrivateAccess = true))
+	FText MonsterName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
+	float Defense;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
+	float MaxHP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
+	float CurrentAttackDamage;
 
 protected:
 	// Called when the game starts or when spawned
