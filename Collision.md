@@ -1,28 +1,25 @@
 # Collision
-	UMyAnimInstance::UMyAnimInstance()
-	{
-		...
-		static ConstructorHelpers::FObjectFinder<UAnimMontage> DASH_MONTAGER(TEXT("AnimMontage'/Game/BluePrint/AnimationMontage/AM_ShinbiDash.AM_ShinbiDash'"));
-		if (DASH_MONTAGER.Succeeded())
+	void AMyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+	{ // 여긴 몽타주 끝나면 타는 곳이라 이름으로 일단 구분해줬다. 더 좋은 방법이 있긴 할것 같다.
+		if (Montage->GetName() != "AM_ShinbiDash")
 		{
-			DashMontage = DASH_MONTAGER.Object;
+			IsAttacking = false;
 		}
-	}	
-	
-	bool UMyAnimInstance::GetDashing()
-	{
-		return bDashing;
+		else if (Montage->GetName() == "AM_ShinbiDash")
+		{
+			if (MyAnim)
+				MyAnim->SetDashing(false);
+		}
 	}
-
-	void UMyAnimInstance::SetDashing(bool bDash)
+	
+	void AMyCharacter::DoOnce()
 	{
-		if (GEngine)
+		if (MyAnim)
 		{
-			if (bDash)
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("SetDashing True"));
-			else
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("SetDashing False"));
+			if (MyAnim->GetDashing()) return;
+			MyAnim->PlayDashMontage(); // Dash몽타주 플레이
+			MyAnim->SetDashing(true); // 대쉬중 체크.
 		}
-
-		bDashing = bDash;
+		FVector Location;
+		LaunchCharacter(/*GetActorRotation() + */GetActorForwardVector() * 1900, false, false); // 캐릭터 전진
 	}
