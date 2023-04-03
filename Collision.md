@@ -1,9 +1,7 @@
 # Collision
-	DECLARE_MULTICAST_DELEGATE(FOnDashEndNotifyDelegate);
-	DECLARE_MULTICAST_DELEGATE(FOnEnemyAttackHitNotifyRDelegate);
-	...
-	public:
-		UFUNCTION()
-		void AnimNotify_EnemyAttackHit();
-		...
-		FOnEnemyAttackHitNotifyRDelegate OnEnemyAttackHitNotify;
+	void UMyAnimInstance::AnimNotify_EnemyAttackHit()
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("EnemyAttackHit"));
+		OnEnemyAttackHitNotify.Broadcast();
+	}
