@@ -1,5 +1,5 @@
 # Collision
-	...
+	DECLARE_MULTICAST_DELEGATE(FOnDashEndNotifyDelegate);
 	DECLARE_MULTICAST_DELEGATE(FOnEnemyAttackHitNotifyRDelegate);
 	...
 	public:
