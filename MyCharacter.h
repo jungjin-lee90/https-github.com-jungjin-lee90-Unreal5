@@ -31,6 +31,8 @@ public:
 
 	void AttackHitNotifyL();
 	void AttackHitNotifyR();
+	void DashEndNotify();
+	void EnemyAttackHit();
 
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
@@ -54,9 +56,10 @@ public:
 	class UWidgetComponent* NameWidget;
 
 	float CurrentHP;
-
+	
 private:
 	bool IsAttacking = false;
+
 	UPROPERTY()
 	class UMyAnimInstance* MyAnim;
 
@@ -77,6 +80,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
 	float CurrentAttackDamage;
+
+	void DoOnce();
+	void UpdateCurrentHPWidget(float HP);
 
 protected:
 	// Called when the game starts or when spawned

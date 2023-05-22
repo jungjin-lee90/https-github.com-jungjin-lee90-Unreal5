@@ -9,6 +9,16 @@ const FName AMyAIController::HomePosKey(TEXT("HomePos"));
 const FName AMyAIController::PatrolPosKey(TEXT("PatrolPos"));
 const FName AMyAIController::TargetKey(TEXT("Target"));
 
+const FName AMyAIController::EnemyHomePosKey(TEXT("EnemyHomePos"));
+const FName AMyAIController::EnemyPatrolPosKey(TEXT("EnemyPatrolPos"));
+const FName AMyAIController::EnemyTargetKey(TEXT("EnemyTarget"));
+
+const FName AMyAIController::EnemyHomePosArcherKey(TEXT("EnemyHomePosArcher"));
+const FName AMyAIController::EnemyPatrolPosArcherKey(TEXT("EnemyPatrolPosArcher"));
+const FName AMyAIController::EnemyTargetArcherKey(TEXT("EnemyTargetArcher"));
+
+
+
 AMyAIController::AMyAIController()
 {
 	//TimerInterval = 3.0f;

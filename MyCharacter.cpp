@@ -96,6 +96,8 @@ void AMyCharacter::BeginPlay()
 		MyAnim->OnMontageEnded.AddDynamic(this, &AMyCharacter::OnAttackMontageEnded);
 		MyAnim->OnAttackHitNotifyL.AddUObject(this, &AMyCharacter::AttackHitNotifyL);
 		MyAnim->OnAttackHitNotifyR.AddUObject(this, &AMyCharacter::AttackHitNotifyR);
+		MyAnim->OnDashEndNotify.AddUObject(this, &AMyCharacter::DashEndNotify);
+		MyAnim->OnEnemyAttackHitNotify.AddUObject(this, &AMyCharacter::EnemyAttackHit);
 	}
 
 	CurrentHP = MaxHP;
@@ -120,6 +122,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &AMyCharacter::Attack);
 	PlayerInputComponent->BindAction(TEXT("AttackR"), EInputEvent::IE_Pressed, this, &AMyCharacter::AttackR);
+	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Pressed, this, &AMyCharacter::DoOnce);
 }
 
 void AMyCharacter::MoveForward(float NewAxisValue)
@@ -169,7 +172,15 @@ void AMyCharacter::AttackR()
 
 void AMyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	IsAttacking = false;
+	if (Montage->GetName() != "AM_ShinbiDash")
+	{
+		IsAttacking = false;
+	}
+	else if (Montage->GetName() == "AM_ShinbiDash")
+	{
+		if (MyAnim)
+			MyAnim->SetDashing(false);
+	}
 }
 
 void AMyCharacter::AttackHitNotifyL()
@@ -242,24 +253,95 @@ void AMyCharacter::AttackHitNotifyR()
 		PowerUpEffect->Activate();
 }
 
+void AMyCharacter::DashEndNotify()
+{
+	if (MyAnim)
+		MyAnim->SetDashing(false);
+}
+
+void AMyCharacter::EnemyAttackHit()
+{
+	//충돌 체크 해서 상대에게 데미지를 입힌다.
+	float AttackRange = 100.0f;
+	float AttackRadius = 50.0f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams Params(NAME_None, false, this);
+
+	FVector StartLocation, EndLocation;
+	StartLocation = GetActorLocation();
+	EndLocation = GetActorLocation() + GetActorForwardVector() * AttackRange;
+	bool bResult = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(AttackRadius),
+		Params);
+
+	//UE_LOG(LogTemp, Warning, TEXT("StartLocation : %s, EndLocation : %s"), StartLocation.ToString(), EndLocation.ToString());
+
+	FVector TraceVec = GetActorForwardVector() * AttackRange;
+	FVector Center = GetActorLocation() + TraceVec * 0.5f;
+	float HalfHeight = AttackRange * 0.5f + AttackRadius;
+
+	//Capsule 의 Z (Up)를 TraceVec 방향으로 회전 
+	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+
+	float DebugLifeTime = 5.0f;
+
+	DrawDebugCapsule(GetWorld(),
+		Center,
+		HalfHeight,
+		AttackRadius,
+		CapsuleRot,
+		DrawColor,
+		false,
+		DebugLifeTime);
+
+	if (bResult)
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("AMyCharacter::EnemyAttackHit == true"));
+
+		if (HitResult.GetActor())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hit Actor Name : %s"), *HitResult.GetActor()->GetName());
+			if (CurrentHP < MaxHP)
+				CurrentHP += 10;
+			UpdateCurrentHPWidget(CurrentHP);
+			FDamageEvent DamageEvent;
+			HitResult.GetActor()->TakeDamage(CurrentAttackDamage, DamageEvent, GetController(), this);
+		}
+	}
+	else
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("AMyCharacter::EnemyAttackHit == false"));
+	}
+}
+
 float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	UE_LOG(LogTemp, Warning, TEXT("Actor : %s took Damage : %f"), *GetName(), FinalDamage);
+	//UE_LOG(LogTemp, Warning, TEXT("Actor : %s took Damage : %f"), *GetName(), FinalDamage);
 
 	// CurrentHP 깍아봐
 	float fDamage = DamageAmount - Defense;
 	CurrentHP -= fDamage;
 	if (MaxHP > 0)
 	{
-		float HPRate = CurrentHP / MaxHP;
+		/*float HPRate = CurrentHP / MaxHP;
 		if (HPRate < 0)
 			HPRate = 0.0f;
-		UE_LOG(LogTemp, Warning, TEXT("CurrentHP : %f, HP Rate : %f"), CurrentHP, HPRate);
+		UE_LOG(LogTemp, Warning, TEXT("CurrentHP : %f, HP Rate : %f"), CurrentHP, HPRate);*/
 
-		auto HPWidget = Cast<UMyUserWidget>(HPBarWidget->GetUserWidgetObject());
+		/*auto HPWidget = Cast<UMyUserWidget>(HPBarWidget->GetUserWidgetObject());
 		if (HPWidget)
-			HPWidget->SetHP(HPRate);
+			HPWidget->SetHP(HPRate);*/
+		UpdateCurrentHPWidget(CurrentHP);
 
 		/*auto DamageWidget2 = Cast<UMyUserWidgetDamage>(DamageWidget->GetUserWidgetObject());
 		if (DamageWidget2)
@@ -277,13 +359,34 @@ float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 		FQuat LookAtRot = FRotationMatrix::MakeFromX(Dir).ToQuat();
 		SetActorRotation(LookAtRot);
 		//SetActorEnableCollision(false);
-	}
 
-	if (CurrentHP <= 0.0f)
-	{
-		MyAnim->SetDead();
+		if (CurrentHP <= 0.0f)
+			MyAnim->SetDead();
 	}
 
 	return FinalDamage;
+}
+
+void AMyCharacter::DoOnce()
+{
+	if (MyAnim)
+	{
+		if (MyAnim->GetDashing()) return;
+		MyAnim->PlayDashMontage(); // Dash몽타주 플레이
+		MyAnim->SetDashing(true); // 대쉬중 체크.
+	}
+	FVector Location = (GetActorRotation().Vector() + GetActorForwardVector()) * 5000;
+	LaunchCharacter(Location, false, false); // 캐릭터 전진
+}
+
+void AMyCharacter::UpdateCurrentHPWidget(float HP)
+{
+	auto HPWidget = Cast<UMyUserWidget>(HPBarWidget->GetUserWidgetObject());
+	float HPRate = HP / MaxHP;
+	if (HPRate < 0)
+		HPRate = 0.0f;
+
+	if (HPWidget)
+		HPWidget->SetHP(HPRate);
 }
 

@@ -23,6 +23,14 @@ public:
 	static const FName PatrolPosKey;
 	static const FName TargetKey;
 
+	static const FName EnemyHomePosKey;
+	static const FName EnemyPatrolPosKey;
+	static const FName EnemyTargetKey;
+
+	static const FName EnemyHomePosArcherKey;
+	static const FName EnemyPatrolPosArcherKey;
+	static const FName EnemyTargetArcherKey;
+
 private:
 	void OnTimer();
 

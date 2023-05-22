@@ -19,6 +19,12 @@ UMyAnimInstance::UMyAnimInstance()
 		AttackMontageR = ATTACK_MONTAGER.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DASH_MONTAGER(TEXT("AnimMontage'/Game/BluePrint/AnimationMontage/AM_ShinbiDash.AM_ShinbiDash'"));
+	if (DASH_MONTAGER.Succeeded())
+	{
+		DashMontage = DASH_MONTAGER.Object;
+	}
+
 	bDead = false;
 }
 
@@ -49,6 +55,11 @@ void UMyAnimInstance::PlayAttackMontageR()
 	Montage_Play(AttackMontageR, 1.0f);
 }
 
+void UMyAnimInstance::PlayDashMontage()
+{
+	Montage_Play(DashMontage, 1.0f);
+}
+
 void UMyAnimInstance::AnimNotify_AttackHitNotifyL()
 {
 	if (GEngine)
@@ -63,7 +74,39 @@ void UMyAnimInstance::AnimNotify_AttackHitNotifyR()
 	OnAttackHitNotifyR.Broadcast();
 }
 
+void UMyAnimInstance::AnimNotify_DashEnd()
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("DashEndNotify"));
+	OnDashEndNotify.Broadcast();
+}
+
+void UMyAnimInstance::AnimNotify_EnemyAttackHit()
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("EnemyAttackHit"));
+	OnEnemyAttackHitNotify.Broadcast();
+}
+
 void UMyAnimInstance::SetDead()
 {
 	bDead = true;
+}
+
+bool UMyAnimInstance::GetDashing()
+{
+	return bDashing;
+}
+
+void UMyAnimInstance::SetDashing(bool bDash)
+{
+	if (GEngine)
+	{
+		if (bDash)
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("SetDashing True"));
+		else
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("SetDashing False"));
+	}
+
+	bDashing = bDash;
 }
