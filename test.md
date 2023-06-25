@@ -1,15 +1,44 @@
 # 소스정리
 
-    void AMyCharacter::BeginPlay()
-    {
-        ...
-
-        MyAnim = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
-        if (MyAnim)
+    #include <string>
+    #include <vector>
+    #include <regex>
+    
+    using namespace std;
+    
+    string ReturnResult(int nLength)
+    {                                
+        string strResult("");
+        for(int i=0; i<nLength; i++)
         {
-            ...
-            MyAnim->OnEnemyAttackHitNotify.AddUObject(this, &AMyCharacter::EnemyAttackHit);
+            strResult += "1";
         }
-
-        CurrentHP = MaxHP;
+        
+        return strResult;
+    }
+    
+    int solution(vector<string> babbling) {
+        int answer = 0;
+        string strMatchList[4] = {"aya", "ye", "woo", "ma"};
+        
+        for(auto& i : babbling)
+        {
+            string strTest = i;
+            for(auto j : strMatchList) 
+            {
+                /*regex re(j);
+                if (std::regex_match(strTest, re))
+                    answer++;*/
+                
+                strTest = regex_replace(strTest, regex(j), "1");
+                
+                if (strTest == ReturnResult(strTest.size())) 
+                {
+                    answer++;   
+                    break;
+                }
+            }
+            
+        }
+        return answer;
     }
