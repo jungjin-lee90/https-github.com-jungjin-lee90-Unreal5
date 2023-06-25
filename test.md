@@ -5,43 +5,35 @@
     
     using namespace std;
     
-    int GetValue(vector<int> vCommon, bool& bMul)
+    int CalcTotal(int num, int nValue, int nCount, int nSum)
     {
-        int nResult[2]{0};
-        int nValue = 0;
-        bMul = false;
-        for(int i=1; i<3; i++)
-            nResult[i-1] = vCommon[i] - vCommon[i-1];
-        
-        nValue = nResult[0];
-        for (int i=1; i<2; i++)
+        if (nCount == num)
+            return nSum;
+        else
         {
-            if (nValue == nResult[i]) // 등차
-                return nValue;
-            else // 등비
-            {
-                bMul = true;
-                int j=2;
-                while(true)
-                {
-                    if (nValue * j == nResult[i])    
-                        return j;   
-                    
-                    j++;
-                }
-            }
+            nCount++;
+            nSum += nValue;
+            return CalcTotal(num, nValue + 1, nCount, nSum);
         }
     }
     
-    int solution(vector<int> common) {
-        int answer = 0;
-        bool bMulti;
-        int nValue = GetValue(common, bMulti); 
-        int nLastValue = common[common.size() - 1];
-        if (bMulti)
-            answer = nLastValue * nValue;         
-        else
-            answer = nLastValue + nValue;   
-        
+    vector<int> solution(int num, int total) {
+        vector<int> answer;
+        int nAnswer, nFindValue;
+        int i = -100;
+        while(true)
+        {
+            nFindValue = CalcTotal(num, i, 0, 0);
+            nAnswer = i;
+            if (total == nFindValue)
+            {
+                for (int i = nAnswer; i < nAnswer + num; i++)
+                    answer.push_back(i);
+    
+                break;
+            } 
+            i++;
+        }
+    
         return answer;
     }
