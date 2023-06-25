@@ -2,43 +2,46 @@
 
     #include <string>
     #include <vector>
-    #include <regex>
     
     using namespace std;
     
-    string ReturnResult(int nLength)
-    {                                
-        string strResult("");
-        for(int i=0; i<nLength; i++)
-        {
-            strResult += "1";
-        }
+    int GetValue(vector<int> vCommon, bool& bMul)
+    {
+        int nResult[2]{0};
+        int nValue = 0;
+        bMul = false;
+        for(int i=1; i<3; i++)
+            nResult[i-1] = vCommon[i] - vCommon[i-1];
         
-        return strResult;
-    }
-    
-    int solution(vector<string> babbling) {
-        int answer = 0;
-        string strMatchList[4] = {"aya", "ye", "woo", "ma"};
-        
-        for(auto& i : babbling)
+        nValue = nResult[0];
+        for (int i=1; i<2; i++)
         {
-            string strTest = i;
-            for(auto j : strMatchList) 
+            if (nValue == nResult[i]) // 등차
+                return nValue;
+            else // 등비
             {
-                /*regex re(j);
-                if (std::regex_match(strTest, re))
-                    answer++;*/
-                
-                strTest = regex_replace(strTest, regex(j), "1");
-                
-                if (strTest == ReturnResult(strTest.size())) 
+                bMul = true;
+                int j=2;
+                while(true)
                 {
-                    answer++;   
-                    break;
+                    if (nValue * j == nResult[i])    
+                        return j;   
+                    
+                    j++;
                 }
             }
-            
         }
+    }
+    
+    int solution(vector<int> common) {
+        int answer = 0;
+        bool bMulti;
+        int nValue = GetValue(common, bMulti); 
+        int nLastValue = common[common.size() - 1];
+        if (bMulti)
+            answer = nLastValue * nValue;         
+        else
+            answer = nLastValue + nValue;   
+        
         return answer;
     }
