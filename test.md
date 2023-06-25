@@ -5,13 +5,16 @@
     
     using namespace std;
     
-    vector<string> solution(string my_str, int n) {
-        vector<string> answer;
-        int i = 0;
-        for(i=0; i<my_str.size(); i+=n)
+    int solution(vector<int> array) {
+        int answer = 0;
+        for(auto i : array)
         {
-            answer.push_back(my_str.substr(i, n));
+            string strValue = to_string(i);
+            for(auto j : strValue)
+            {
+                if (j == '7')
+                    answer++;   
+            }
         }
-        
         return answer;
     }
