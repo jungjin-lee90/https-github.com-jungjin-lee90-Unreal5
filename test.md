@@ -2,12 +2,10 @@
 
     #include <string>
     #include <vector>
-    #include <cmath>
     
     using namespace std;
     
-    int solution(int n) {
+    int solution(string str1, string str2) {
         int answer = 0;
-        int temp = sqrt(n);
-        return (temp * temp == n) ? 1 : 2;
+        return (str1.find(str2, 0) != string::npos) ? 1 : 2;
     }
