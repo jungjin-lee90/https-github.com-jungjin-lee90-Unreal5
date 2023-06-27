@@ -2,19 +2,15 @@
 
     #include <string>
     #include <vector>
+    #include <algorithm>
     
     using namespace std;
     
-    int solution(vector<int> array) {
-        int answer = 0;
-        for(auto i : array)
-        {
-            string strValue = to_string(i);
-            for(auto j : strValue)
-            {
-                if (j == '7')
-                    answer++;   
-            }
-        }
+    string solution(string my_string) {
+        string answer = "";
+        transform(my_string.begin(), my_string.end(), my_string.begin(), ::tolower);
+        sort(my_string.begin(), my_string.end());
+        answer = my_string;
+        
         return answer;
     }
