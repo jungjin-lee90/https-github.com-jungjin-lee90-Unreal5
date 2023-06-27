@@ -2,15 +2,14 @@
 
     #include <string>
     #include <vector>
-    #include <algorithm>
+    #include <cmath> // pow 써도됨..
     
     using namespace std;
     
-    string solution(string my_string) {
-        string answer = "";
-        transform(my_string.begin(), my_string.end(), my_string.begin(), ::tolower);
-        sort(my_string.begin(), my_string.end());
-        answer = my_string;
+    int solution(int n, int t) {
+        int answer = n;
+        for(int i=0; i<t; i++)
+            answer = answer * 2;
         
         return answer;
     }
