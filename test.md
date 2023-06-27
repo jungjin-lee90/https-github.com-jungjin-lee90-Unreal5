@@ -5,7 +5,26 @@
     
     using namespace std;
     
-    int solution(string str1, string str2) {
-        int answer = 0;
-        return (str1.find(str2, 0) != string::npos) ? 1 : 2;
+    int solution(vector<int> array) {
+        int answer = 1, nMax = 0;
+        int nCount[1000]{ 0 };
+        if (array.size() == 1)
+            return array[0];
+        else
+        {
+            for (int i = 0; i < array.size(); i++)
+            {
+                nCount[array[i]]++;
+                if (nMax < nCount[array[i]]) 
+                {
+                    nMax = nCount[array[i]]; // 몇번 나왔나
+                    answer = array[i]; // 최빈값
+                }
+                else if(nMax == nCount[array[i]])
+                    answer = -1;
+            }
+                
+        }
+    
+        return answer;
     }
