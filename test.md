@@ -4,67 +4,45 @@
     #include <vector>
     #include <cstring>
     #include <string>
+    #include <sstream> // stringstream 사용하기 위해 추가
     
     using namespace std;
     
-    vector<string> split(string str, string div)
+    void ExampleStringStream()
     {
-        vector<string> vStr;
-        int nStart = 0;
-        int nEnd = str.find(div);
-        while(nEnd != -1)
-        {
-            vStr.push_back(str.substr(nStart, nEnd - nStart));
-            nStart = nEnd + 1;
-            nEnd = str.find(div, nStart);
-        }
-        vStr.push_back(str.substr(nStart, nEnd - nStart));
-        return vStr;
-    }
+        stringstream ss;
+        vector<string> vStr, vResult;
+        vStr.push_back("1 + 2 = 3");
+        vStr.push_back("2+7=2");
+        int nA, nB, nResult, nRealResult = 0;
+        char strOP, strOP2;
     
-    vector<string> solution(vector<string> quiz) {
-        vector<string> answer, strResultList;
-        for(auto i : quiz)
+        for (auto i : vStr)
         {
-            bool bPlus = false;
-            int nA, nB, nResult;
-            strResultList = split(i, " ");
-            for(int j = 0; j < strResultList.size(); j++)          
+            ss.str(i);
+            ss >> nA;
+            ss >> strOP;
+            ss >> nB;
+            ss >> strOP2;
+            ss >> nResult;
+    
+            switch (strOP)
             {
-                switch(j)
-                {
-                    case 0: 
-                        nA = stoi(strResultList[j]);
-                        break;
-                        
-                    case 1:
-                        bPlus = strResultList[j] == "+";
-                        break;
-                        
-                    case 2:
-                        nB = stoi(strResultList[j]);
-                        break;
-                        
-                    case 4:
-                        nResult = stoi(strResultList[j]);
-                        break;  
-                }
+            case '+':
+                nRealResult = nA + nB;
+                break;
+    
+            case '-':
+                nRealResult = nA - nB;
+                break;
             }
-            
-            if (bPlus)
-            {
-                if (nA + nB == nResult)
-                    answer.push_back("O");    
-                else
-                    answer.push_back("X");    
-            }
+    
+            if (nRealResult == nResult)
+                cout << i << " result = " << "O" << endl;
             else
-            {
-                if (nA - nB == nResult)
-                    answer.push_back("O");    
-                else
-                    answer.push_back("X");    
-            }
+                cout << i << " result = " << "X" << endl;
+    
+            ss.clear();
         }
-        return answer;
     }
+
