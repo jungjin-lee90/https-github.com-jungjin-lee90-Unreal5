@@ -44,7 +44,7 @@
       allocated_storage = 8 
       # 어떤 sql 쓸건지
       engine = "mysql"
-      engine_version = "5.6.35"
+      engine_version = "8.0.33"
       instance_class = "db.t2.micro"
       username = "admin"
       # password는 임시 비밀번호로 쓸거라 대충 만들고 나중에 DB 접속해서 변경
