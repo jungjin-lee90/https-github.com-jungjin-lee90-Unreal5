@@ -1,9 +1,14 @@
 # 소스정리
-    # "리소스 타입" "리소스 네이밍"
-    resource "aws_key_pair" "web_admin" {
-      key_name = "web_admin"
-      # 만든 ssh 키
-      public_key = file("~/.ssh/web_admin.pub")
+    # aws_security_group resource를 ssh라고 명명
+    resource "aws_security_group" "ssh" {
+      name = "allow_ssh_from_all"
+      description = "Allow SSH port from all"
+      ingress { # 인바운드 설정
+        from_port = 22 # 22번 포트부터
+        to_port = 22 # 22번 포트까지 사용. ssh는 22번 포트 쓰기에 22번 포트만 사용하게끔 설정
+        protocol = "tcp" # 프로토콜은 tcp
+        cidr_blocks = ["0.0.0.0/0"] # 모든 IP에서 다 열어주겠다.
+      }
     }
 
 
