@@ -14,8 +14,7 @@
         cidr_blocks = ["0.0.0.0/0"]
       }
     }
-    # 위는 이미 추가한 내용, 설명을 위해 추가해둠.
-    ############################################################################
+    
     # resource가 아니고 data이다. 
     # 이름이 default인 sercuroty_group을 찾아서 값을 참조할 수 있게 해준다.
     data "aws_security_group" "default" {
@@ -37,7 +36,22 @@
         data.aws_security_group.default.id
       ]
     }
-
+    # 위는 이미 추가한 내용, 설명을 위해 추가해둠.
+    ############################################################################
+    # db resource "web_db" 생성
+    resource "aws_db_instance" "web_db" {
+      # DB 사이즈, 기가 단위
+      allocated_storage = 8 
+      # 어떤 sql 쓸건지
+      engine = "mysql"
+      engine_version = "5.6.35"
+      instance_class = "db.t2.micro"
+      username = "admin"
+      # password는 임시 비밀번호로 쓸거라 대충 만들고 나중에 DB 접속해서 변경
+      password = "11112222"
+      # 인스턴스 삭제시 최종 스냅샷 스킵 여부, 디폴트는 false인데 이러면 삭제가 힘들어 true로 변경
+      skip_final_snapshot = true
+    }
 
 
 
