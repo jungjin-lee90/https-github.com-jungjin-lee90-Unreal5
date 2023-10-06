@@ -46,6 +46,8 @@
       engine = "mysql"
       engine_version = "8.0.33"
       instance_class = "db.t2.micro"
+      ## db_name 추가
+      db_name = "mysql" 
       username = "admin"
       # password는 임시 비밀번호로 쓸거라 대충 만들고 나중에 DB 접속해서 변경
       password = "11112222"
